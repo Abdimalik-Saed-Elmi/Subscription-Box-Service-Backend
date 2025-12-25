@@ -17,7 +17,7 @@ export const subsSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["ACTIVE", "PAUSED", "CANCELED"],
+        enum: ["ACTIVE", "PAUSED", "CANCELED", "PAST_DUE", "REVIEW"],
         default: "ACTIVE"
     },
     startDate: {
