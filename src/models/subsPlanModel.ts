@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const subsPlanSchema = new mongoose.Schema({
+const subsPlanSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true

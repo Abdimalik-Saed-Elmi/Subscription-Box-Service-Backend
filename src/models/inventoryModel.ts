@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const inventorySchena = new mongoose.Schema({
+const inventorySchena = new mongoose.Schema({
     product:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Products",

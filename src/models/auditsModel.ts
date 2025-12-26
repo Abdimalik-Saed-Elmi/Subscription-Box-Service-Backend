@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const auditsSchema = new mongoose.Schema({
+const auditsSchema = new mongoose.Schema({
     entityType: {
         type: String,
         required: true

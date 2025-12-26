@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const payAttemptSchema = new mongoose.Schema({
+const payAttemptSchema = new mongoose.Schema({
     subscription:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Subscription",

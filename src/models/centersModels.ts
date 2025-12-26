@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const centersSchema = new mongoose.Schema({
+const centersSchema = new mongoose.Schema({
     name:{
         type: String,
         required: true
