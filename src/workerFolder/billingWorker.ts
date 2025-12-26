@@ -2,13 +2,15 @@ import { Worker } from "bullmq";
 import { Subs } from "../models/subsModel";
 import { PayAttempts } from "../models/paymentAttemptModel";
 import { Orders } from "../models/orderModel";
+import { Inventory } from "../models/inventoryModel";
+import { Types } from "mongoose";
 
 
 
 const billingWorker = new Worker("billingQueue",
 async(job)=>{
     try {
-        const {subscriptionId, userId, productId, ceneterId, amount } = job.data
+        const {subscriptionId, userId, productId, centerId, amount } = job.data
         const subscription = await Subs.findOne({_id: subscriptionId} as any)
         if (!subscription) {
           console.log("subs not found", subscriptionId)
@@ -16,7 +18,7 @@ async(job)=>{
         }
         const paymentSuccess = Math.random() > 0.3
 
-        await PayAttempts.create({
+       const payAttempts = await PayAttempts.create({
             subscriptionId: subscription._id,
             amount: 10,
             status: paymentSuccess ? "SUCCESS" : "FAILED"
@@ -28,6 +30,19 @@ async(job)=>{
             console.log("billing not success")
             return
         }
+        const inventory = await Inventory.findOneAndUpdate({
+            productId: new Types.ObjectId(productId),
+            centerId: new Types.ObjectId(centerId),
+            quantity: {$gte: 1}
+        } as any,
+    {
+        $inc: {quantity: -1}
+    },
+        {new: true} as any)
+    if (!inventory) {
+      console.log("no inventory")
+      return
+    }
         await Orders.create({
             userId,
             subscriptionId: subscription._id,
