@@ -1,13 +1,14 @@
 import { Worker } from "bullmq";
 import { Subs } from "../models/subsModel";
 import { PayAttempts } from "../models/paymentAttemptModel";
+import { Orders } from "../models/orderModel";
 
 
 
 const billingWorker = new Worker("billingQueue",
 async(job)=>{
     try {
-        const {subscriptionId} = job.data
+        const {subscriptionId, userId, productId, ceneterId, amount } = job.data
         const subscription = await Subs.findOne({_id: subscriptionId} as any)
         if (!subscription) {
           console.log("subs not found", subscriptionId)
@@ -21,17 +22,29 @@ async(job)=>{
             status: paymentSuccess ? "SUCCESS" : "FAILED"
         })
 
-        if (paymentSuccess) {
+        if (!paymentSuccess) {
+            subscription.status = "PAST_DUE"
+            await subscription.save()
+            console.log("billing not success")
+            return
+        }
+        await Orders.create({
+            userId,
+            subscriptionId: subscription._id,
+            productId,
+            ceneterId,
+            amount,
+            quantity: 1,
+            status: "PENDING"
+        })
           subscription.nextBillingDate = new Date(
               Date.now() + 30 * 24 * 60 * 60 * 1000
           )
+
           await subscription.save()
-          console.log("billing ok", subscriptionId)
-        } else {
-            subscription.status = "PAST_DUE"
-            await subscription.save()
-            console.log("billing not success", subscriptionId)
-        }
+          console.log("Payment success and the order is created")
+
+
         
         
     } catch (error) {
