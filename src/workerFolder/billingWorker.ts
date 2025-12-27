@@ -36,8 +36,9 @@ const billingWorker = new Worker("billingQueue",
             }
 
             if (!paymentSuccess) {
-                subscription.status = "PAST_DUE"
-                await subscription.save()
+                 await Subs.findByIdAndUpdate(subscriptionId, {
+                   status: "PAST_DUE"
+               }, {new: true} as any)
                 console.log("billing not success")
                 return
             }
@@ -62,6 +63,9 @@ const billingWorker = new Worker("billingQueue",
                     console.log("Audit error in the inventory", error)
                 }
                 console.log("no inventory")
+                await Subs.findByIdAndUpdate(subscriptionId, {
+                   status: "REVIEW"
+               }, {new: true} as any)
                 return
             }
 
@@ -95,11 +99,14 @@ const billingWorker = new Worker("billingQueue",
                 console.log("Audit error in the Order creation", error)
             }
 
-            subscription.nextBillingDate = new Date(
+          const nextBill =  subscription.nextBillingDate = new Date(
                 Date.now() + 30 * 24 * 60 * 60 * 1000
             )
 
-            await subscription.save()
+            await Subs.findByIdAndUpdate(subscriptionId, {
+                status: "ACTIVE",
+                nextBillingDate: nextBill
+            }, {new: true} as any)
             console.log("Payment success and the order is created")
 
         } catch (error) {
