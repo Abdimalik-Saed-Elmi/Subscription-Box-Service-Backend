@@ -14,7 +14,5 @@ export const auth = async (c: Context, next: Next) => {
     const payload  = jwt.verify(tokens, configs.JWT_Secret)
     c.set("user", payload)
     await next()
- } catch (error) {
-    
- }
+ } catch (error) {console.log(error)}
 }

@@ -10,9 +10,7 @@ export const register = async (c: Context) => {
     const { name, email, password } = await c.req.json()
 
     const exist = await User.findOne({ email })
-    if (exist) {
-        return c.json({ error: "User already Exist" }, 400)
-    }
+    if (exist) { return c.json({ error: "User already Exist" }, 400)}
 
     const hashed = await bcrypt.hash(password, 10)
 
@@ -31,9 +29,8 @@ export const register = async (c: Context) => {
 export const login = async (c: Context) => {
     const { email, password } = await c.req.json()
     const user = await User.findOne({ email })
-    if (!user) {
-        return c.json({ error: "Invalid" }, 401)
-    }
+    if (!user) {return c.json({ error: "Invalid" }, 401)}
+    
     const passwordCompare = await bcrypt.compare(password, user.password)
     if (!passwordCompare) {
         return c.json({ error: "Invalid Email or Password" }, 401)
