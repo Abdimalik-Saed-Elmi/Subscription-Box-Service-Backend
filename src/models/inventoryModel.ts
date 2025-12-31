@@ -1,18 +1,20 @@
 import mongoose from "mongoose";
 
 const inventorySchena = new mongoose.Schema({
-    product:{
+    productId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Products",
         required: true
     },
-    centers:{
+    centerId:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Centers"
+        ref: "Centers",
+        required: true
     },
     quantity:{
         type: Number,
-        required: true
+        required: true,
+        min: 0
     }
 },{timestamps: true})
 

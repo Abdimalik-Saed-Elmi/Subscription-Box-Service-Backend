@@ -1,5 +1,4 @@
 import type { Context } from "hono";
-import { User } from "../models/userModel";
 import { Subs } from "../models/subsModel";
 import { Orders } from "../models/orderModel";
 
