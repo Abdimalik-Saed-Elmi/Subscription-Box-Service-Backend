@@ -71,7 +71,8 @@ The following components were not implemented in this project:
 - Docker / Docker Compose  
 - CI/CD Pipeline  
 - API Gateway / Reverse Proxy  
-- Advanced Inventory & Fulfillment Center Logic  
+- Advanced Inventory & Fulfillment Center Logic
+  - The system currently operates with a single default fulfillment center.  
 
 These items were considered outside the scope of backend logic validation.
 The project focuses on core system behavior, data flow correctness, and background processing rather than deployment or infrastructure concerns.

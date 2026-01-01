@@ -7,11 +7,13 @@ import { Audits } from "../models/auditsModel";
 import { Inventory } from "../models/inventoryModel";
 
 
+const defualtCenterId = new Types.ObjectId("000000000000000000000252")
+
 
 const billingWorker = new Worker("billingQueue",
     async (job) => {
         try {
-            const { subscriptionId, userId, productId, centerId, amount } = job.data
+            const { subscriptionId, userId, productId, amount } = job.data
             const subscription = await Subs.findOne({ _id: subscriptionId } as any)
             if (!subscription) {
                 console.log("subs not found", subscriptionId)
@@ -44,7 +46,7 @@ const billingWorker = new Worker("billingQueue",
             }
             const inventory = await Inventory.findOneAndUpdate({
                 productId: new Types.ObjectId(productId),
-                centerId: new Types.ObjectId(centerId),
+                centerId: defualtCenterId,
                 quantity: { $gte: 1 }
             } as any,
                 {
@@ -83,7 +85,7 @@ const billingWorker = new Worker("billingQueue",
                 userId,
                 subscriptionId: subscription._id,
                 productId,
-                centerId,
+                centerId: defualtCenterId,
                 amount,
                 quantity: 1,
                 status: "PENDING"

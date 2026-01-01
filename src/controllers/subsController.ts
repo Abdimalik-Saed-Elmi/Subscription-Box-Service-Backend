@@ -4,6 +4,9 @@ import { SubsPlan } from "../models/subsPlanModel";
 import { Inventory } from "../models/inventoryModel";
 import { Subs } from "../models/subsModel";
 import { Audits } from "../models/auditsModel";
+import { Types } from "mongoose";
+
+const defualtCenterId = new Types.ObjectId("000000000000000000000252")
 
 export const createSubs = async (c: Context) => {
     const {userId, planId, productId} = await c.req.json();
@@ -17,7 +20,8 @@ export const createSubs = async (c: Context) => {
       return c.json({msg: "Plan not found"}, 404)
     }
     const inventory = await Inventory.findOne({
-        product: productId,
+        productId,
+        centerId : defualtCenterId,
         quantity: {$gt: 0} 
     } as any)
     if (!inventory) {
@@ -29,7 +33,7 @@ export const createSubs = async (c: Context) => {
         plan: planId,
         product: productId,
         startDate: new Date,
-        nextBillingDate: new Date
+        nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
     })
 
     await Audits.create({

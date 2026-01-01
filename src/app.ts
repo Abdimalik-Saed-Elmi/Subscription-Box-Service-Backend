@@ -13,7 +13,7 @@ const app = new Hono
 app.use("/product/*", auth)
 app.use("/user/*", auth)
 app.use("/plan/*", auth)
-app.use("/subscription/*", auth)
+app.use("/subscription", auth)
 app.use("/admin/*", auth)
 app.use("/admin/inventory/*", auth)
 
