@@ -13,6 +13,7 @@ const subsSchema = new mongoose.Schema({
     },
     product: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "Products",
         required: true
     },
     status: {

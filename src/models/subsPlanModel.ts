@@ -11,7 +11,7 @@ const subsPlanSchema = new mongoose.Schema({
     },
         billingCycle:{
             type: String,
-            enum: ["MONTHLY", "QUARTERLY", "YEARLY"]
+            enum: ["MONTHLY", "YEARLY"]
         }
 
 

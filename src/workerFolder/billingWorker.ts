@@ -13,16 +13,21 @@ const defualtCenterId = new Types.ObjectId("000000000000000000000252")
 const billingWorker = new Worker("billingQueue",
     async (job) => {
         try {
-            const { subscriptionId, userId, productId, amount } = job.data
-            const subscription = await Subs.findOne({ _id: subscriptionId } as any)
+            const { subscriptionId} = job.data
+            const subscription = await Subs.findOne({_id:subscriptionId} as any).populate("plan").populate("product")
             if (!subscription) {
                 console.log("subs not found", subscriptionId)
                 return
             }
+            const userId = subscription.user
+            const productId = subscription.product
+            const amount = subscription.plan.price
+
+
             const paymentSuccess = Math.random() > 0.3
 
             const payAttempts = await PayAttempts.create({
-                subscriptionId: subscription._id,
+                subscription: subscription._id,
                 amount: 10,
                 status: paymentSuccess ? "SUCCESS" : "FAILED"
             })
@@ -82,10 +87,10 @@ const billingWorker = new Worker("billingQueue",
                 console.log("Audit error in the inventory deduction", error)
             }
             const order = await Orders.create({
-                userId,
-                subscriptionId: subscription._id,
-                productId,
-                centerId: defualtCenterId,
+                user: userId,
+                subscription: subscription._id,
+                product: productId,
+                center: defualtCenterId,
                 amount,
                 quantity: 1,
                 status: "PENDING"
