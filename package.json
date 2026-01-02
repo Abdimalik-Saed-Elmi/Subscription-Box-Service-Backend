@@ -9,7 +9,7 @@
     "@types/jsonwebtoken": "^9.0.10"
   },
   "scripts": {
-    "dev": "bun --watch index.ts"
+    "dev": "bun index.ts"
   },
   "peerDependencies": {
     "typescript": "^5"
