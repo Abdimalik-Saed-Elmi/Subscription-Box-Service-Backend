@@ -69,7 +69,7 @@ It focuses on clarity and correctness rather than unnecessary complexity.
 The following components were not fully implemented in this project:
 
 - Docker / Docker Compose  
- - The project includes Docker and Docker Compose configuration for local development
+  - The project includes Docker and Docker Compose configuration for local development
 - CI/CD Pipeline  
 - API Gateway / Reverse Proxy  
 - Advanced Inventory & Fulfillment Center Logic
