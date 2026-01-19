@@ -23,7 +23,16 @@ export const register = async (c: Context) => {
 
     const token = jwt.sign({ userId: user._id, role: user.role }, configs.JWT_Secret, { expiresIn: "7d" })
 
-    return c.json({ token })
+    return c.json({
+        msg: "User Registered Successfully",
+        token,
+        user:{
+            id: user._id,
+            name : user.name,
+            email: user.email,
+            role: user.role
+        }
+    }, 201)
 }
 
 export const login = async (c: Context) => {

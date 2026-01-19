@@ -2,24 +2,18 @@
 
 FROM oven/bun:1.1.0
 
-# Use production node environment by default.
-ENV NODE_ENV production
-
-
 WORKDIR /usr/src/app
 
-
 # Copy dependency files first (for caching)
- Copy package.json bun.lockb ./ 
+COPY package.json bun.lock ./
 
- #install dependencies
- RUN bun install --frozen-lockfile
+# Install dependencies
+RUN bun install --frozen-lockfile
 
-# Copy the rest of the source files into the image.
+# Copy the rest of the source files into the image
 COPY . .
 
-# Expose the port that the application listens on.
 EXPOSE 1000
 
-# Run the application.
+# Dev command (kept simple for the assignment). In later commits we can add a production start.
 CMD ["bun", "run", "dev"]
