@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM oven/bun:1.1.0
+FROM oven/bun:latest
 
 WORKDIR /usr/src/app
 
