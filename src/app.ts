@@ -7,6 +7,7 @@ import { auth } from "./middlewares/auth"
 import authRoute from "./routes/authRoute"
 import adminRoute from "./routes/adminRoute"
 import inventoryRoute from "./routes/inventoryRoute"
+import centersRoute from "./routes/centersRoute"
 const app = new Hono
 
 // Protected Middlewares
@@ -16,6 +17,8 @@ app.use("/plan/*", auth)
 app.use("/subscription", auth)
 app.use("/admin/*", auth)
 app.use("/admin/inventory/*", auth)
+app.use("/centers/*", auth)
+
 
 
 app.route("/auth", authRoute)
@@ -27,6 +30,10 @@ app.route("/user", userRoute)
 app.route("/plan", subsPlanRoute)
 app.route("/subscription", subsRoute)
 app.route("/admin/inventory", inventoryRoute)
+app.route("/centers", centersRoute);
+
+
+
 app.get("/good", (c) => {
     return c.json({status: "Good"})
 })

@@ -2,49 +2,54 @@ import type { Context } from "hono";
 import { Inventory } from "../models/inventoryModel";
 import { Types } from "mongoose";
 
-const defualtCenterId = new Types.ObjectId("000000000000000000000252")
 
-export const addInventory = async (c:Context) =>{
-    const {productId, quantity} = await c.req.json()
+export const addInventory = async (c: Context) => {
+  const { productId, centerId, quantity } = await c.req.json();
 
-    if (!productId || quantity < 0) {
-        return c.json({error: "Invalid"}, 400)
-    }
+  if (!productId || !centerId || quantity == null || quantity < 0) {
+    return c.json({ error: "Invalid" }, 400);
+  }
 
-    const existing = await Inventory.findOne({
-        productId : new Types.ObjectId(productId),
-        centerId : defualtCenterId,
-    } as any)
+  const existing = await Inventory.findOne({
+    productId: new Types.ObjectId(productId),
+    centerId: new Types.ObjectId(centerId),
+  } as any);
 
-    if (existing) {
-        return c.json({error: "Inventory already exist update"}, 400)
-    }
+  if (existing) {
+    return c.json({ error: "Inventory already exists, update it" }, 400);
+  }
 
-    const inventory = await Inventory.create({
-        productId : new Types.ObjectId(productId),
-        centerId : defualtCenterId,
-        quantity
-    })
+  const inventory = await Inventory.create({
+    productId: new Types.ObjectId(productId),
+    centerId: new Types.ObjectId(centerId),
+    quantity,
+  });
 
-    return c.json(inventory, 201)
-}
+  return c.json(inventory, 201);
+};
 
 
-export const updateInventory = async (c:Context) =>{
-    const {productId, quantity} = await c.req.json()
 
-    if (!productId || quantity < 0) {
-        return c.json({error: "Invalid"}, 400)
-    }
 
-    const inventory = await Inventory.findByIdAndUpdate({
-        productId : new Types.ObjectId(productId),
-        centerId : defualtCenterId
-    } as any, {quantity}, {new: true} as any)
+export const updateInventory = async (c: Context) => {
+  const { productId, centerId, quantity } = await c.req.json();
 
-    if (!inventory) {
-        return c.json({error: "Inventory  not found"}, 404)
-    }
+  if (!productId || !centerId || quantity == null || quantity < 0) {
+    return c.json({ error: "Invalid" }, 400);
+  }
 
-    return c.json(inventory)
-}
+  const inventory = await Inventory.findOneAndUpdate(
+    {
+      productId: new Types.ObjectId(productId),
+      centerId: new Types.ObjectId(centerId),
+    } as any,
+    { $set: { quantity } },
+    { new: true } as any
+  );
+
+  if (!inventory) {
+    return c.json({ error: "Inventory not found" }, 404);
+  }
+
+  return c.json(inventory);
+};
